@@ -36,13 +36,15 @@ def sort_val(items):
 def desc_value_items(items, max_wt):
     desc_val_items = []
     total_value = 0
+    total_weight = 0
     sorted_items = sort_val(items)
     for item in sorted_items:
         if item.weight <= max_wt:
             desc_val_items.append(item)
             max_wt -= item.weight
+            total_weight += item.weight
             total_value += item.value
-    return desc_val_items, total_value
+    return desc_val_items, total_value, total_weight
 
 
 def asc_wt_items(items, max_wt):
@@ -58,6 +60,9 @@ def asc_wt_items(items, max_wt):
             total_val += item.value
     return asc_wt_items, total_val, total_wt
 
+def sort_ratio_items(items):
+    return sorted(items, key=lambda item: item.value/item.weight, reverse=True)
+
 nIn = item_cnt
 maxWtIn = item_max_wt
 maxValIn = 50
@@ -67,8 +72,8 @@ for item in items:
     print(f"Value: {item.value}, Weight: {item.weight}")
 
 
-desc_val_items, total_value = desc_value_items(items, maxWtIn)
-print(f"\nSolution 1: Take as many items as possible with highest value first\nTotal value: {total_value}")
+desc_val_items, total_value, total_weight = desc_value_items(items, maxWtIn)
+print(f"\nSolution 1: Using decreasing Value\nTotal value: {total_value}\nTotal weight: {total_weight}")
 for item in desc_val_items:
     print(f"Value: {item.value}, Weight: {item.weight}")
 
@@ -76,4 +81,10 @@ for item in desc_val_items:
 desc_val_items, total_value, total_weight = asc_wt_items(items, maxWtIn)
 print(f"\nSolution 2: Using increasing Weight\nTotal value: {total_value}\nTotal weight: {total_weight}")
 for item in desc_val_items:
+    print(f"Value: {item.value}, Weight: {item.weight}")
+
+sort_ratio_items = sort_ratio_items(items)
+
+print(f"\nSolution 3: Using decreasing Ratio\n")
+for item in sort_ratio_items:
     print(f"Value: {item.value}, Weight: {item.weight}")
