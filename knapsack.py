@@ -84,6 +84,20 @@ def desc_ratio_items(items, max_weight):
             total_weight += item.weight
     return sorted_ratio_items, total_value, total_weight
 
+def knapsack(items, W):
+    n = len(items)
+    K = [[0 for x in range(W+1)] for x in range(n+1)]
+
+    for i in range(n+1):
+        for w in range(W+1):
+            if i == 0 or w == 0:
+                K[i][w] = 0
+            elif items[i-1].weight <= w:
+                K[i][w] = max(items[i-1].value + K[i-1][w-items[i-1].weight], K[i-1][w])
+            else:
+                K[i][w] = K[i-1][w]
+
+
 desc_val_items, total_value, total_weight = desc_value_items(items, maxWtIn)
 print(f"\nSolution 1: Using decreasing Value\nTotal value: {total_value}\nTotal weight: {total_weight}")
 for item in desc_val_items:
