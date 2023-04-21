@@ -87,7 +87,6 @@ def desc_ratio_items(items, max_weight):
 def knapsack(items, W):
     n = len(items)
     K = [[0 for x in range(W+1)] for x in range(n+1)]
-
     for i in range(n+1):
         for w in range(W+1):
             if i == 0 or w == 0:
@@ -96,6 +95,14 @@ def knapsack(items, W):
                 K[i][w] = max(items[i-1].value + K[i-1][w-items[i-1].weight], K[i-1][w])
             else:
                 K[i][w] = K[i-1][w]
+    result = []
+    w = W
+    for i in range(n, 0, -1):
+        if K[i][w] != K[i-1][w]:
+            result.append(items[i-1])
+            w -= items[i-1].weight
+    result.reverse()
+    return result, K[n][W]      
 
 
 desc_val_items, total_value, total_weight = desc_value_items(items, maxWtIn)
@@ -112,4 +119,10 @@ for item in asc_weight_items:
 dec_ratio_items, total_value, total_weight = desc_ratio_items(items, maxWtIn)
 print(f"\nSolution 3: Using decreasing Ratio(Value/Weight)\nTotal value: {total_value}\nTotal weight: {total_weight}")
 for item in dec_ratio_items:
+    print(f"Value: {item.value}, Weight: {item.weight}")
+
+items, total_value = knapsack(items, maxWtIn)
+total_weight = sum([item.weight for item in items])
+print(f"\nSolution 4: Using dynamic programming\nTotal value: {total_value}\nTotal weight: {total_weight}")
+for item in items:
     print(f"Value: {item.value}, Weight: {item.weight}")
