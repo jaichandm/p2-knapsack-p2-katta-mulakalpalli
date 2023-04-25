@@ -132,7 +132,9 @@ for item in items:
 
 dp_times = []
 g_value_times = []
+g_weight_times = []
 g_value_err = []
+g_weight_err = []
 
 def rel_err(true_value, approx_value):
     return float(approx_value / true_value)
@@ -150,7 +152,13 @@ for i in range(num_runs):
     end_time = time.perf_counter()
     g_value_times.append(end_time - start_time)
 
+    start_time = time.perf_counter()
+    asc_weight_items, g2_value, g2_weight = asc_wt_items(items_timing, maxWtIn)
+    end_time = time.perf_counter()
+    g_weight_times.append(end_time - start_time)
+
     g_value_err.append(rel_err(dp_soln,g1_value))
+    g_weight_err.append(rel_err(dp_soln,g2_value))
 
 
 
@@ -160,5 +168,7 @@ for i in range(num_runs):
     print("Iteration ",i,":")
     print("Time (DP):", dp_times[i])
     print("Time (Greedy Value):", g_value_times[i])
+    print("Time (Greedy Weight):", g_weight_times[i])
     print("Quality (Greedy Value):", g_value_err[i])
+    print("Quality (Greedy Weight):", g_weight_err[i])
     print("="*50)
