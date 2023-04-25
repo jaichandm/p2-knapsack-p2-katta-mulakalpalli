@@ -1,5 +1,6 @@
 import random
 import sys
+import time
 
 if len(sys.argv) < 3 or sys.argv[1] == "" or sys.argv[2] == "":
     print("Not enough input arguments provided. Exiting the program...")
@@ -66,7 +67,9 @@ def sort_ratio_items(items):
 nIn = item_cnt
 maxWtIn = item_max_wt
 maxValIn = 50
+num_runs =10
 items = gen_items(nIn, maxWtIn, maxValIn)
+items_timing = items
 print(f"No. of Items: {len(items)}")
 for item in items:
     print(f"Value: {item.value}, Weight: {item.weight}")
@@ -104,7 +107,6 @@ def knapsack(items, W):
     result.reverse()
     return result, K[n][W]      
 
-
 desc_val_items, total_value, total_weight = desc_value_items(items, maxWtIn)
 print(f"\nSolution 1: Using decreasing Value\nTotal value: {total_value}\nTotal weight: {total_weight}")
 for item in desc_val_items:
@@ -126,3 +128,37 @@ total_weight = sum([item.weight for item in items])
 print(f"\nSolution 4: Using dynamic programming\nTotal value: {total_value}\nTotal weight: {total_weight}")
 for item in items:
     print(f"Value: {item.value}, Weight: {item.weight}")
+
+
+dp_times = []
+g_value_times = []
+g_value_err = []
+
+def rel_err(true_value, approx_value):
+    return float(approx_value / true_value)
+
+print("Timing and Quality")
+print("Number of Iterations:",num_runs)
+for i in range(num_runs):
+    start_time = time.perf_counter()
+    dp_items, dp_soln = knapsack(items_timing, maxWtIn)
+    end_time = time.perf_counter()
+    dp_times.append(end_time - start_time)
+
+    start_time = time.perf_counter()
+    desc_val_items, g1_value, g1_weight = desc_value_items(items_timing, maxWtIn)
+    end_time = time.perf_counter()
+    g_value_times.append(end_time - start_time)
+
+    g_value_err.append(rel_err(dp_soln,g1_value))
+
+
+
+print("Timing and Quality Results:")
+print("="*50)
+for i in range(num_runs):
+    print("Iteration ",i,":")
+    print("Time (DP):", dp_times[i])
+    print("Time (Greedy Value):", g_value_times[i])
+    print("Quality (Greedy Value):", g_value_err[i])
+    print("="*50)
